@@ -26,7 +26,7 @@ export default function AuthenticatedLayout({ user, header, children }) {//modif
                                 </NavLink>
                             </div>
                             <div className="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                                <NavLink href={route('project.index')} active={route().current('project.Index')}>
+                                <NavLink href={route('project.index')} active={route().current('project.index')}>
                                     Projects
                                 </NavLink>
                             </div>

@@ -6,6 +6,7 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Http\Resources\TaskResource;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -15,21 +16,22 @@ class ProjectController extends Controller
      */
     public function index()
     {
+        // Creazione della query per ottenere i progetti
+        $query = Project::query();
+        $sortDirection = request("sort_direction","desc");
+        $sortField = request("sort_field","created_at");
 
-            // Creazione della query per ottenere i progetti
-            $query = Project::query();
+        // Filtraggio dei progetti in base al nome
+        if(request('name')) {
+            $query = $query->where('name', 'like', '%' . request('name') . '%');
+        }
 
-            // Filtraggio dei progetti in base al nome
-            if(request('name')) {
-                $query = $query->where('name', 'like', '%' . request('name') . '%');
-            }
-
-            // Filtraggio dei progetti in base allo stato
-            if(request('status')) {
-                $query = $query->where('status', request('status'));
-            }
+        // Filtraggio dei progetti in base allo stato
+        if(request('status')) {
+            $query = $query->where('status', request('status'));
+        }
         // Paginazione dei risultati e impostazione del numero di pagine visualizzate sui lati
-        $projects = $query->paginate(10);
+        $projects = $query->orderBy($sortField, $sortDirection)->paginate(10)->onEachSide(1);
 
         return Inertia("Project/Index", [
             "projects" => ProjectResource::collection($projects),
@@ -58,7 +60,27 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        //
+        $query = $project->tasks();
+        $sortField = request("sort_field",'created_at');
+        $sortDirection = request("sort_direction","desc");
+
+        // Filtraggio dei progetti in base al nome
+        if(request('name')) {
+            $query = $query->where('name', 'like', '%' . request('name') . '%');
+        }
+
+        // Filtraggio dei progetti in base allo stato
+        if(request('status')) {
+            $query = $query->where('status', request('status'));
+        }
+
+        $tasks = $query->orderBy($sortField, $sortDirection)->paginate(10)->onEachSide(1);
+        return inertia( 'Project/Show', [
+            'project' => new ProjectResource($project),
+            'tasks' => TaskResource::collection($tasks),
+            'queryParams' => request()->query() ?: null,
+
+        ]);
     }
 
     /**
