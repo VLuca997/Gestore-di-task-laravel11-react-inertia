@@ -115,6 +115,8 @@ export default function Show({ auth, project, tasks, queryParams }) {
 
         </div>
 
+        
+
         </AuthenticatedLayout>
 
     )
