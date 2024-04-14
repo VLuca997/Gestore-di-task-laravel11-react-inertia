@@ -5,6 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon; // Importa la classe Carbon per la gestione delle date
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectResource extends JsonResource
 {
@@ -41,7 +42,7 @@ class ProjectResource extends JsonResource
             "created_at" => (new Carbon($this->created_at))->format("Y-m-d"), // Data di creazione del progetto
             "due_date" => (new Carbon($this->due_date))->format("Y-m-d"), // Data di scadenza del progetto
             "status" => $this->status, // Stato del progetto
-            "image_path" => $this->image_path, // Percorso dell'immagine associata al progetto
+            "image_path" => $this->image_path ? Storage::url($this->image_path) : '', // Percorso dell'immagine associata al progetto e allo Storage Facades per cominicazione
             // "assignedUser" => $this->assignedUser,
             // "project" => new ProjectResource($this->project),
             "createdBy" => $this->createdBy, // Utente creatore del progetto
