@@ -6,8 +6,10 @@ use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Http\Resources\UserCrudResource;
+use App\Http\Resources\UserResource;
 //HELPERS
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class UserController extends Controller
@@ -17,27 +19,23 @@ class UserController extends Controller
      */
     public function index()
     {
-        // Creazione della query per ottenere i progetti
         $query = User::query();
         $sortDirection = request("sort_direction","desc");
         $sortField = request("sort_field","created_at");
 
-        // Filtraggio dei progetti in base al nome
         if(request('name')) {
             $query = $query->where('name', 'like', '%' . request('name') . '%');
         }
-        // Filtraggio dei progetti in base alla email
         if(request('email')) {
             $query = $query->where('email', 'like', '%' . request('email') . '%');
         }
 
 
-        // Paginazione dei risultati e impostazione del numero di pagine visualizzate sui lati
         $users = $query->orderBy($sortField, $sortDirection)->paginate(10)->onEachSide(1);
 
         return Inertia("User/Index", [
             "users" => UserCrudResource::collection($users),
-            'queryParams' => request()->query() ?: null,/*passa i parametri della query string alla vista. La funzione request()->query() restituisce un array associativo contenente tutti i parametri della query string dell'URL corrente. Se non ci sono parametri, viene restituito null. */
+            'queryParams' => request()->query() ?: null,
             'success' => session('success'),
         ]);
     }
@@ -74,7 +72,9 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        //
+        return inertia('User/Edit', [
+            'user' => new UserCrudResource($user),
+        ]);
     }
 
     /**
@@ -82,7 +82,18 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        //
+
+				$data = $request->validated();
+                $password = $data['password'] ?? null;
+                if($password){
+                    $data['password'] = bcrypt($password);
+                }else{
+                    unset($data['password']);
+                }
+
+				$user->update($data);
+
+				return to_route('user.index')->with('success',"User \"$user->name\" was updated!");
     }
 
     /**
