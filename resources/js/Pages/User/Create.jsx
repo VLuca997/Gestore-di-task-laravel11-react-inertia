@@ -9,15 +9,14 @@ import { Head, Link, useForm } from "@inertiajs/react";
 export default function Create({ auth }) {
     //funzioanlità di Inertia,
     const { data, setData, post, processing, errors, reset } = useForm({
-        image: '',
         name: '',
-        status: '',
-        description: '',
-        due_date: '',
+        email: '',
+        password: '',
+        password_confirmation: '',
     })
     const onSubmit = (e) => {
         e.preventDefault();
-        post(route('project.store'));
+        post(route('user.store'));
     }
 
     return (
@@ -26,120 +25,99 @@ export default function Create({ auth }) {
             header=
             {<div className="flex justify-between items-center">
                 <h2 className="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-                    Create a new Project
+                    Create a new User
                 </h2>
 
             </div>}
         >
-            <Head title="Project" />
+            <Head title="User" />
 
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <form onSubmit={onSubmit} className="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
 
-                            {/* INSERIMENTO IMMAGINE-------------- */}
-                            <div>
-                                <InputLabel
-                                    htmlFor="project_image_path"
-                                    value="Project Image"
-                                />
-                                <TextInput
-                                    id="project_image_path"
-                                    type="file"
-                                    name="image"
-                                    className="mt-1 block w-full"
-                                    onChange={(e) => setData('image', e.target.files[0])}
-                                />
-                                <InputError message={errors.image} className="mt-2" />
-                            </div>
-                            {/* ---------------------------------- */}
-
                             {/* INSERIMENTO NAME------------------ */}
                             <div className="mt-4">
                                 <InputLabel
-                                    htmlFor="project_name"
-                                    value="Project Name"
+                                    htmlFor="user_name"
+                                    value="User Name"
                                 />
                                 <TextInput
-                                    id="project_name"
+                                    id="user_name"
                                     type="text"
                                     name="name"
                                     value={data.name}
                                     className="mt-1 block w-full"
-                                    isFocused={true}
                                     onChange={e => setData('name', e.target.value)}
                                 />
                                 <InputError message={errors.name} className="mt-2" />
                             </div>
                             {/* ---------------------------------- */}
 
-                            {/* INSERIMENTO DESCRIPTION------------------ */}
+                            {/* INSERIMENTO EMAIL------------------ */}
                             <div className="mt-4">
                                 <InputLabel
-                                    htmlFor="project_description"
-                                    value="Project Description"
-                                />
-                                <TextAreaInput
-                                    id="project_description"
-                                    type="text"
-                                    name="description"
-                                    value={data.description}
-                                    className="mt-1 block w-full"
-                                    isFocused={true}
-                                    onChange={e => setData('description', e.target.value)}
-                                />
-                                <InputError message={errors.description} className="mt-2" />
-                            </div>
-                            {/* ---------------------------------- */}
-
-                            {/* INSERIMENTO DeadLine------------------ */}
-                            <div className="mt-4">
-                                <InputLabel
-                                    htmlFor="project_due_date"
-                                    value="Project DeadLine"
+                                    htmlFor="user_email"
+                                    value="User Email"
                                 />
                                 <TextInput
-                                    id="project_due_date"
-                                    type="date"
-                                    name="due_date"
-                                    value={data.due_date}
+                                    id="user_email"
+                                    type="text"
+                                    name="email"
+                                    value={data.email}
                                     className="mt-1 block w-full"
-                                    isFocused={true}
-                                    onChange={e => setData('due_date', e.target.value)}
+                                    onChange={e => setData('email', e.target.value)}
                                 />
-                                <InputError message={errors.due_date} className="mt-2" />
+                                <InputError message={errors.email} className="mt-2" />
                             </div>
                             {/* ---------------------------------- */}
 
-                            {/* INSERIMENTO STATUS------------------ */}
+                            {/* INSERIMENTO PASSWORD------------------ */}
                             <div className="mt-4">
                                 <InputLabel
-                                    htmlFor="project_status"
-                                    value="Project Status"
+                                    htmlFor="user_password"
+                                    value="Password"
                                 />
-                                <SelectInput
-                                    id="project_status"
-                                    name="status"
+                                <TextInput
+                                    id="user_password"
+                                    type="password"
+                                    name="password"
+                                    value={data.password}
                                     className="mt-1 block w-full"
-                                    onChange={e => setData('status', e.target.value)}
-                                >
-                                    <option value="">Select Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="in_progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                </SelectInput>
-                                <InputError message={errors.status} className="mt-2" />
+                                    onChange={e => setData('password', e.target.value)}
+                                />
+                                <InputError message={errors.password} className="mt-2" />
                             </div>
                             {/* ---------------------------------- */}
+                            {/* CONFERMA PASSWORD------------------ */}
+                            <div className="mt-4">
+                                <InputLabel
+                                    htmlFor="user_password_confirmation"
+                                    value="Confirm Password"
+                                />
+                                <TextInput
+                                    id="user_password_confirmation"
+                                    type="password"
+                                    name="password_confirmation"
+                                    value={data.password_confirmation}
+                                    className="mt-1 block w-full"
+                                    onChange={e => setData('password_confirmation', e.target.value)}
+                                />
+                                <InputError message={errors.password_confirmation} className="mt-2" />
+                            </div>
+                            {/* ---------------------------------- */}
+
+
                             {/* ---------------------------------- */}
                             <div className="mt-4 text-right">
-                                <Link href={route('project.index')}
+                                {/* RETURN */}
+                                <Link href={route('user.index')}
                                 className="bg-gray-100 py-1 px-3 text-gray-800 rounded shadow transition-all hover:bg-gray-200 mr-2">
                                     Cancel
                                 </Link>
+                                {/* SUBMIT */}
                                 <button className="bg-emerald-500 py-1 px-3 text-white rounded shadow transition-all hover:bg-emerald-600">
-
                                     Submit
                                 </button>
 
