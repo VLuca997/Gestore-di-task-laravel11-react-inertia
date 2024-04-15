@@ -53,6 +53,8 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
+
+        $data['email_verified_at'] = time();
         $data['password'] = bcrypt($data['password']);
         User::create($data);
 
@@ -102,5 +104,13 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         //
+        $user->delete();
+        // if($user->image_path){
+        //     Storage::disk('public')->deleteDirectory(dirname($user->image_path));
+        // }
+        $nameUserDeleted = $user->name;
+        $idUserDeleted = $user->id;
+
+        return to_route('user.index')->with('success',"User \"$idUserDeleted\"\"$nameUserDeleted\"was Deleted!");
     }
 }
