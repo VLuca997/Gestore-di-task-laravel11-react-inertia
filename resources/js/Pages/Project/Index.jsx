@@ -131,7 +131,7 @@ const sortChanged = (name) => {
                                                 sort_direction = {queryParams.sort_direction}
                                                 sortChanged={sortChanged}
                                             >
-                                                DUE DATE
+                                                DEADLINES
                                             </TableHeading>
                                             <th className="px-3 py-2">Created By</th>
                                             <th className="px-3 py-2 text-right">Actions</th>
