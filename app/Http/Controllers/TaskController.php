@@ -42,6 +42,7 @@ class TaskController extends Controller
 
     return Inertia("Task/Index", [
         "tasks" => TaskResource::collection($tasks),
+        // 'success' => session('success'),
         'queryParams' => request()->query() ?: null,/*passa i parametri della query string alla vista. La funzione request()->query() restituisce un array associativo contenente tutti i parametri della query string dell'URL corrente. Se non ci sono parametri, viene restituito null. */
     ]);
 }
@@ -121,7 +122,7 @@ class TaskController extends Controller
             'users'=> UserCrudResource::collection($users),//prendiamo la collezione completa
             'task' => new TaskResource($task),
         ]);
-        
+
     }
 
     /**
@@ -140,7 +141,7 @@ class TaskController extends Controller
         }
         $task->update($data);
 
-        return to_route('task.index')->with('success',"Task \"$task->name\" was updated!");
+        return to_route('task.index')->with('success',"Task was updated!");
     }
 
     /**

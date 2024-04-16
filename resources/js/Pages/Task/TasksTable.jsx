@@ -7,6 +7,7 @@ import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants.jsx"; /
 
 
 export default function TasksTable({
+
     tasks,
     queryParams=null,
     hideProjectColumn = false,
@@ -105,7 +106,7 @@ const deleteTask = (task) => {
                                 sort_direction = {queryParams.sort_direction}
                                 sortChanged={sortChanged}
                             >
-                                DEADLINES 
+                                DEADLINES
                             </TableHeading>
                             <th className="px-3 py-2 text-green-500">Created By</th>
                             <th className="px-3 py-2 text-yellow-500">Assigned to</th>

@@ -3,7 +3,7 @@ import { Head, Link } from "@inertiajs/react";
 import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants.jsx"; // mappatura
 import TasksTable from "../Task/TasksTable";
 
-export default function Show({ auth, project, tasks, queryParams }) {
+export default function Show({ auth, project, tasks,  queryParams }) {
 
     return (
         <AuthenticatedLayout
@@ -106,7 +106,7 @@ export default function Show({ auth, project, tasks, queryParams }) {
 
                         <div className="p-6 text-gray-900 dark:text-gray-100">
 
-                            <TasksTable tasks={tasks} queryParams={queryParams} hideProjectColumn={true}/>
+                            <TasksTable tasks={tasks} queryParams={queryParams} hideProjectColumn={true} />
 
                         </div>
                     </div>
@@ -115,7 +115,7 @@ export default function Show({ auth, project, tasks, queryParams }) {
 
         </div>
 
-        
+
 
         </AuthenticatedLayout>
 
