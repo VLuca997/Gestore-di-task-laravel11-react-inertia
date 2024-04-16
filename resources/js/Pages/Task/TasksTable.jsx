@@ -3,7 +3,7 @@ import Pagination from "@/Components/Pagination.jsx";
 import SelectInput from "@/Components/SelectInput.jsx";
 import TextInput from "@/Components/TextInput";
 import { Link, router } from "@inertiajs/react";
-import { PROJECT_STATUS_CLASS_MAP, PROJECT_STATUS_TEXT_MAP } from "@/constants.jsx"; // mappatura
+import { TASK_STATUS_CLASS_MAP, TASK_STATUS_TEXT_MAP } from "@/constants.jsx"; // mappatura
 
 
 export default function TasksTable({
@@ -33,7 +33,7 @@ const onKeyPress = (name, e) => {
     searchFieldChanged(name, e.target.value);
 }
 //-------------------------------------------------
-//SMISTAMENTO:
+//SORTING:
 const sortChanged = (name) => {
     if(name === queryParams.sort_field){
         if(queryParams.sort_direction === 'asc'){
@@ -49,6 +49,15 @@ const sortChanged = (name) => {
 }
 
 //---------------------------------------------------------
+//CRUD DELETE TASK
+const deleteTask = (task) => {
+    if(!window.confirm('Are you sure you want to delete the Task??')){
+        return;
+    }
+    router.delete(route('task.destroy', task.id))
+}
+//---------------------------------------------------------
+
     return(
     <>
         <div className="overflow-auto">
@@ -65,14 +74,14 @@ const sortChanged = (name) => {
                                 ID
                             </TableHeading>
                             <th className="px-3 py-2">Image</th>
-                            {!hideProjectColumn && <th className="px-3 py-2 text-red-300">Project Name</th>}
+                            {!hideProjectColumn && <th className="px-3 py-2 text-orange-600">Project Name</th>}
                             <TableHeading
                                 name='name'
                                 sort_field={queryParams.sort_field}
                                 sort_direction = {queryParams.sort_direction}
                                 sortChanged={sortChanged}
                             >
-                                NAME
+                                TASK NAME
                             </TableHeading>
                             <TableHeading
                                 name='status'
@@ -96,10 +105,11 @@ const sortChanged = (name) => {
                                 sort_direction = {queryParams.sort_direction}
                                 sortChanged={sortChanged}
                             >
-                                DUE DATE
+                                DEADLINES 
                             </TableHeading>
-                            <th className="px-3 py-2">Created By</th>
-                            <th className="px-3 py-2 text-right">Actions</th>
+                            <th className="px-3 py-2 text-green-500">Created By</th>
+                            <th className="px-3 py-2 text-yellow-500">Assigned to</th>
+                            <th className="px-3 py-2 text-purple-500">Actions</th>
                         </tr>
                     </thead>
 
@@ -135,9 +145,10 @@ const sortChanged = (name) => {
 
                                 </SelectInput>
                                 </th>
-                            <th className="px-3 py-2"> </th>
-                            <th className="px-3 py-2"> </th>
-                            <th className="px-3 py-2"> </th>
+                            <th className="px-3 py-2"></th>
+                            <th className="px-3 py-2"></th>
+                            <th className="px-3 py-2"></th>
+                            <th className="px-3 py-2"></th>
                             <th className="px-3 py-2"></th>
                         </tr>
                     </thead>
@@ -151,31 +162,38 @@ const sortChanged = (name) => {
                                 <td className="px-3 py-2">
                                     <img src={task.image_path} style={{width:70, height:30}} />
                                 </td>
-                                {!hideProjectColumn && <td className="px-3 py-2 text-red-300">{task.project.name}</td>}
+                                {!hideProjectColumn && <td className="px-3 py-2 text-orange-600">{task.project.name}</td>}
                                 <td className="px-3 py-2">{task.name}</td>
                                 <td>
                                     <span className={
                                         "px-2 py-1 rounded text-white " +
-                                        PROJECT_STATUS_CLASS_MAP[task.status]
+                                        TASK_STATUS_CLASS_MAP[task.status]
                                     }>
 
-                                    {PROJECT_STATUS_TEXT_MAP[task.status]}
+                                    {TASK_STATUS_TEXT_MAP[task.status]}
                                     </span>
                                 </td>
+                                {/* <pre className="text-red-500">{JSON.stringify(task)}</pre>
+                                    grazie a questo ho capito come accedere e far stampare la riga assignedUser.name
+                                    ( p.s ricordavo e in piu manco ho visto l'esempio di createdBy.name ahahah soz :') )
+                                */}
                                 <td className="px-3 py-2 text-nowrap">{task.created_at}</td>
                                 <td className="px-3 py-2 text-nowrap">{task.due_date}</td>
-                                <td className="px-3 py-2">{task.createdBy.name}</td>
-                                <td className="px-3 py-2">
+                                <td className="px-3 py-2 text-green-500">{task.createdBy.name}</td>
+                                <td className="px-3 py-2 text-yellow-500">{task.assignedUser.name}</td>
+                                <td className="px-3 py-2 text-nowrap">
                                     <Link href={route('task.edit',task.id)}
                                         className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1"
                                     >
                                         Edit
                                     </Link>
-                                    <Link href={route('task.destroy',task.id)}
+                                    <button
+                                        onClick={(e) => deleteTask(task)}
                                         className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1"
                                     >
                                         Delete
-                                    </Link>
+                                    </button>
+
                                 </td>
                             </tr>
                         ))}
